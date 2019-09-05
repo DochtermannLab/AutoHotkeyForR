@@ -1,0 +1,43 @@
+; ========================================
+; Personal AutoHotkeyScript
+; - Win10
+; - Install AutoHotkey and put this into AutoStart to be available 
+; ==========================================
+
+;Start RStudio
+#q::Run RStudio
+
+;Specific hotkeys active only in rstudio
+#IfWinActive, ahk_exe rstudio.exe
+Capslock::!-  ; make the capslock button give an arrow
+Rctrl::Capslock ; make the right ctrl button caps lock
+`::~ ; get tilde without shift button
+::iin::%>% ; typing iin will produce piping--assumes I ever learn tidyverse syntax
+
+;Send code from Notepad++ to rstudio
+#IfWinActive ahk_class Notepad++
+  ^enter::
+    ; copy text selection to clipboard
+    clipboard=
+    Send ^c 
+    ClipWait, 0.1
+    
+    ; if no text was selected, mark line and copy it to clipboard
+    if clipboard=
+    {
+      Send {HOME}+{END}^c{END}{Down}{HOME}
+    }
+    ClipWait, 0.1
+    
+    ; switch to Rgui and insert clipboard
+    WinActivate, ahk_exe rstudio.exe 
+    Send ^v {Enter}
+    
+    ; switch back to Notapad++
+    WinActivate, ahk_class Notepad++ 
+  return
+
+#IfWinActive
+
+;turn of script
+#Esc::ExitApp  ;Win+Escape key will exit... place this at the bottom of the script
